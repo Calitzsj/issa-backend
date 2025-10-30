@@ -1,24 +1,46 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Demo data
+const products = [
+  {
+    id: 1,
+    name: 'Competition Pistol',
+    description: '9mm competition pistol with enhanced trigger and sights',
+    price: 1250,
+    category: 'firearms'
+  },
+  {
+    id: 2,
+    name: 'iSSA Pro Jersey',
+    description: 'Official iSSA competition shooting jersey',
+    price: 65,
+    category: 'merch'
+  }
+];
+
+const disciplines = [
+  {
+    id: 1,
+    name: 'Precision Target Shooting',
+    description: 'Traditional bullseye shooting at fixed distances.',
+    icon: '🎯'
+  },
+  {
+    id: 2, 
+    name: 'Smallbore Rifle',
+    description: '.22 caliber rifle shooting at paper targets.',
+    icon: '🔫'
+  }
+];
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/products', require('./routes/products'));
-app.use('/api/orders', require('./routes/orders'));
-app.use('/api/targets', require('./routes/targets'));
-app.use('/api/disciplines', require('./routes/disciplines'));
-
-// Health check
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -27,32 +49,26 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Welcome to iSSA Backend API',
-    version: '1.0.0',
-    endpoints: {
-      auth: '/api/auth',
-      products: '/api/products',
-      targets: '/api/targets',
-      disciplines: '/api/disciplines'
+app.get('/api/products', (req, res) => {
+  res.json({ products });
+});
+
+app.get('/api/disciplines', (req, res) => {
+  res.json({ disciplines });
+});
+
+app.post('/api/auth/register', (req, res) => {
+  res.json({
+    message: 'User registered successfully',
+    user: {
+      id: 1,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      memberId: 'ISSA-2024-1234'
     }
   });
 });
-
-// Database connection
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/issa');
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error('Database connection error:', error);
-    process.exit(1);
-  }
-};
-
-connectDB();
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
