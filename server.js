@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-// Multiple health check endpoints - cover all possibilities
+// Multiple health check endpoints
 app.get('/health', (req, res) => {
   console.log('Health check called: /health');
   res.json({ status: 'OK', endpoint: '/health', timestamp: new Date().toISOString() });
@@ -34,14 +34,50 @@ app.get('/ping', (req, res) => {
   res.json({ status: 'OK', endpoint: '/ping' });
 });
 
-// Test endpoint
-app.get('/api/test', (req, res) => {
-  res.json({ test: 'API is working', timestamp: new Date().toISOString() });
+// PRODUCTS ENDPOINT
+app.get('/api/products', (req, res) => {
+  console.log('Products endpoint called');
+  res.json({ 
+    products: [
+      {
+        id: 1,
+        name: 'Competition Pistol',
+        description: '9mm competition pistol with enhanced trigger and sights',
+        price: "R1250",
+        category: 'firearms'
+      },
+      {
+        id: 2,
+        name: 'iSSA Pro Jersey',
+        description: 'Official iSSA competition shooting jersey',
+        price: "R65",
+        category: 'merch'
+      }
+    ]
+  });
 });
 
-const PORT = process.env.PORT || 8080;
+// DISCIPLINES ENDPOINT
+app.get('/api/disciplines', (req, res) => {
+  console.log('Disciplines endpoint called');
+  res.json({ 
+    disciplines: [
+      {
+        id: 1,
+        name: 'Precision Target Shooting',
+        description: 'Traditional bullseye shooting at fixed distances.'
+      },
+      {
+        id: 2, 
+        name: 'Smallbore Rifle',
+        description: '.22 caliber rifle shooting at paper targets.'
+      }
+    ]
+  });
+});
+
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server running on port ${PORT}`);
-  console.log('✅ Multiple health endpoints available:');
-  console.log('✅ /health, /api/health, /, /api, /status, /ping');
+  console.log('✅ All endpoints available including /api/products and /api/disciplines');
 });
