@@ -29,13 +29,13 @@ app.get('/', (req, res) => {
 const products = [
   {
     id: 1,
-    name: 'Fun Shoot',
-    price: R1700
+    name: 'Competition Pistol',
+    price: 1250
   },
   {
     id: 2,
     name: 'iSSA Pro Jersey',
-    price: R650
+    price: 65
   }
 ];
 
