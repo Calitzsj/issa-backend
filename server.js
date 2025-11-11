@@ -3,29 +3,36 @@ const cors = require('cors');
 
 const app = express();
 
-// Middleware - SIMPLIFIED
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// IMMEDIATE Health check - at the very top of middleware
+// Enhanced Health check for Railway - responds immediately
 app.get('/health', (req, res) => {
-  console.log('Health check called');
-  res.status(200).json({ 
-    status: 'OK', 
+  const healthData = {
+    status: 'OK',
+    message: 'iSSA API is healthy and running',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
-  });
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    nodeVersion: process.version,
+    platform: process.platform
+  };
+  
+  console.log('✅ Health check passed:', healthData.timestamp);
+  res.status(200).json(healthData);
 });
 
-// Root route - SIMPLE
+// Root route - responds immediately
 app.get('/', (req, res) => {
   res.json({ 
     status: 'OK', 
-    message: 'iSSA API Server Running'
+    message: 'iSSA API Server Running',
+    timestamp: new Date().toISOString()
   });
 });
 
-// Demo data - WITH STRING PRICES
+// Demo data
 const products = [
   {
     id: 1,
@@ -38,7 +45,7 @@ const products = [
     id: 2,
     name: 'iSSA Pro Jersey',
     description: 'Official iSSA competition shooting jersey',
-    price: "R650",
+    price: "R65",
     category: 'merch'
   }
 ];
@@ -58,7 +65,7 @@ const disciplines = [
 
 // API Routes
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK' });
+  res.json({ status: 'OK', message: 'API health check' });
 });
 
 app.get('/api/products', (req, res) => {
@@ -76,9 +83,19 @@ app.post('/api/auth/register', (req, res) => {
   });
 });
 
-// Start server
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`iSSA Server running on port ${PORT}`);
-  console.log('Health check: /health');
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ iSSA Server successfully started on port ${PORT}`);
+  console.log(`✅ Health check endpoint: /health`);
+  console.log(`✅ Server start time: ${new Date().toISOString()}`);
+  console.log(`✅ All routes are now available`);
+});
+
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
 });
