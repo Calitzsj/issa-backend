@@ -1,43 +1,47 @@
 const express = require('express');
 const app = express();
 
-// Track startup time
-const startTime = Date.now();
-
-// Health check with startup delay
+// Multiple health check endpoints - cover all possibilities
 app.get('/health', (req, res) => {
-  const uptime = Date.now() - startTime;
-  
-  // If app started less than 10 seconds ago, return "starting"
-  if (uptime < 10000) {
-    return res.json({ 
-      status: 'STARTING', 
-      message: 'Application is starting up',
-      uptime: uptime 
-    });
-  }
-  
-  // After 10 seconds, return "OK"
+  console.log('Health check called: /health');
+  res.json({ status: 'OK', endpoint: '/health', timestamp: new Date().toISOString() });
+});
+
+app.get('/api/health', (req, res) => {
+  console.log('Health check called: /api/health');
+  res.json({ status: 'OK', endpoint: '/api/health', timestamp: new Date().toISOString() });
+});
+
+app.get('/', (req, res) => {
+  console.log('Root endpoint called');
   res.json({ 
     status: 'OK', 
-    message: 'Application is healthy',
-    uptime: uptime 
+    message: 'iSSA API Running',
+    timestamp: new Date().toISOString()
   });
 });
 
-// Root route
-app.get('/', (req, res) => {
-  res.json({ message: 'iSSA API Running' });
+// Additional common health check paths
+app.get('/api', (req, res) => {
+  res.json({ status: 'OK', endpoint: '/api' });
+});
+
+app.get('/status', (req, res) => {
+  res.json({ status: 'OK', endpoint: '/status' });
+});
+
+app.get('/ping', (req, res) => {
+  res.json({ status: 'OK', endpoint: '/ping' });
 });
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
-  res.json({ test: 'API is working' });
+  res.json({ test: 'API is working', timestamp: new Date().toISOString() });
 });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log('Start time:', new Date().toISOString());
-  console.log('Health check will return "STARTING" for first 10 seconds');
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log('✅ Multiple health endpoints available:');
+  console.log('✅ /health, /api/health, /, /api, /status, /ping');
 });
