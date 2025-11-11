@@ -7,8 +7,8 @@
     "startCommand": "npm start",
     "restartPolicyType": "ON_FAILURE",
     "healthcheckPath": "/health",
-    "healthcheckTimeout": 300,
-    "healthcheckInterval": 15,
+    "healthcheckTimeout": 60,
+    "healthcheckInterval": 10,
     "healthcheckRetries": 10
   }
 }
