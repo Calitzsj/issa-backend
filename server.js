@@ -3,12 +3,13 @@ const cors = require('cors');
 
 const app = express();
 
-// Middleware
+// Middleware - SIMPLIFIED
 app.use(cors());
 app.use(express.json());
 
-// Health check for Railway
+// IMMEDIATE Health check - at the very top of middleware
 app.get('/health', (req, res) => {
+  console.log('Health check called');
   res.status(200).json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
@@ -16,54 +17,42 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Demo data
+// Root route - SIMPLE
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'iSSA API Server Running'
+  });
+});
+
+// Demo data - SIMPLIFIED (no emojis)
 const products = [
   {
     id: 1,
     name: 'Competition Pistol',
-    description: '9mm competition pistol with enhanced trigger and sights',
-    price: 1250,
-    category: 'firearms'
+    price: 1250
   },
   {
     id: 2,
     name: 'iSSA Pro Jersey',
-    description: 'Official iSSA competition shooting jersey',
-    price: 65,
-    category: 'merch'
+    price: 65
   }
 ];
 
 const disciplines = [
   {
     id: 1,
-    name: 'Precision Target Shooting',
-    description: 'Traditional bullseye shooting at fixed distances.',
-    icon: '🎯'
+    name: 'Precision Target Shooting'
   },
   {
     id: 2, 
-    name: 'Smallbore Rifle',
-    description: '.22 caliber rifle shooting at paper targets.',
-    icon: '🔫'
+    name: 'Smallbore Rifle'
   }
 ];
 
-// Routes
-app.get('/', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: 'iSSA API Server Running',
-    timestamp: new Date().toISOString()
-  });
-});
-
+// API Routes
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: 'iSSA API Server Running',
-    timestamp: new Date().toISOString()
-  });
+  res.json({ status: 'OK' });
 });
 
 app.get('/api/products', (req, res) => {
@@ -77,19 +66,13 @@ app.get('/api/disciplines', (req, res) => {
 app.post('/api/auth/register', (req, res) => {
   res.json({
     message: 'User registered successfully',
-    user: {
-      id: 1,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      memberId: 'ISSA-2024-1234'
-    }
+    user: { id: 1, email: req.body.email }
   });
 });
 
+// Start server
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`iSSA Server running on port ${PORT}`);
-}).on('error', (err) => {
-  console.error('Server error:', err);
+  console.log('Health check: /health');
 });
