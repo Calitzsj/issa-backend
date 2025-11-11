@@ -25,28 +25,34 @@ app.get('/', (req, res) => {
   });
 });
 
-// Demo data - SIMPLIFIED (no emojis)
+// Demo data - WITH STRING PRICES
 const products = [
   {
     id: 1,
     name: 'Competition Pistol',
-    price: 1250
+    description: '9mm competition pistol with enhanced trigger and sights',
+    price: "R1250",
+    category: 'firearms'
   },
   {
     id: 2,
     name: 'iSSA Pro Jersey',
-    price: 65
+    description: 'Official iSSA competition shooting jersey',
+    price: "R650",
+    category: 'merch'
   }
 ];
 
 const disciplines = [
   {
     id: 1,
-    name: 'Precision Target Shooting'
+    name: 'Precision Target Shooting',
+    description: 'Traditional bullseye shooting at fixed distances.'
   },
   {
     id: 2, 
-    name: 'Smallbore Rifle'
+    name: 'Smallbore Rifle',
+    description: '.22 caliber rifle shooting at paper targets.'
   }
 ];
 
